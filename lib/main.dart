@@ -122,22 +122,27 @@ class _TestAppState extends State<TestApp> {
       text = quotes[random.nextInt(quotes.length)];
     });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(text),
-            ElevatedButton(
-              onPressed: changeText,
-              child: const Text("Get Motivation"),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.blue.shade100, // Light blue background
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 22,
             ),
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: changeText,
+            child: const Text("Get Motivation"),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}   
 }
