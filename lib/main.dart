@@ -3,19 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: HomeScreen(),
+  ));
 }
 
 class HomeScreen extends StatefulWidget {
@@ -26,11 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Random random = Random();
+  final random = Random();
 
-  List<String> favorites = [];
-
-  List<String> quotes = [
+  // 100 motivational quotes
+  final List<String> quotes = [
     "Believe in yourself.",
     "Every day is a fresh start.",
     "You are stronger than you think.",
@@ -131,37 +121,94 @@ class _HomeScreenState extends State<HomeScreen> {
     "Success is a mindset."
   ];
 
-  String currentQuote = "Press the button for motivation!";
+  String currentQuote = "Press the button to get motivated!";
+  final List<String> favorites = [];
 
-  void generateQuote() {
+  // Change quote
+  void changeText() {
     setState(() {
       currentQuote = quotes[random.nextInt(quotes.length)];
     });
   }
 
-  void addFavorite() {
+  // Like/unlike quote
+  void toggleFavorite() {
     setState(() {
-      favorites.add(currentQuote);
+      if (favorites.contains(currentQuote)) {
+        favorites.remove(currentQuote);
+      } else {
+        favorites.add(currentQuote);
+      }
     });
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Added to favorites ❤️")),
-    );
+  // Share quote
+  void shareQuote() {
+    Share.share(currentQuote);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade100,
+      appBar: AppBar(
+        title: const Text("Daily Motivation"),
+        backgroundColor: Colors.blue.shade400,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FavoritesScreen(favorites: favorites),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(text),
-            ElevatedButton(
-              onPressed: changeText,
-              child: const Text("Get Motivation"),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                currentQuote,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: changeText,
+                    child: const Text("Get Motivation"),
+                  ),
+                  const SizedBox(width: 15),
+                  ElevatedButton(
+                    onPressed: toggleFavorite,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: favorites.contains(currentQuote)
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
+                    child: const Text("Like"),
+                  ),
+                  const SizedBox(width: 15),
+                  ElevatedButton(
+                    onPressed: shareQuote,
+                    child: const Text("Share"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -170,21 +217,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class FavoritesScreen extends StatelessWidget {
   final List<String> favorites;
-
   const FavoritesScreen({super.key, required this.favorites});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Favorite Quotes")),
-      body: ListView.builder(
-        itemCount: favorites.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(favorites[index]),
-          );
-        },
-      ),
+      appBar: AppBar(title: const Text("Favorites")),
+      body: favorites.isEmpty
+          ? const Center(child: Text("No favorites yet!"))
+          : ListView.builder(
+              itemCount: favorites.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(favorites[index]),
+                );
+              },
+            ),
     );
   }
 }
