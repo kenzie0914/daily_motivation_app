@@ -1,3 +1,3 @@
-Daily Motivation App Description
+Daily Motivation App 
 
 The Daily Motivation app is a Flutter application designed to inspire users with positive and motivational quotes. The app contains a collection of 100 motivational quotes that users can display by pressing the Get Motivation button. Users can also like quotes, which saves them to a favorites list, and share quotes with others through the share feature. The app includes a simple and user-friendly interface with a motivational quote displayed in the center of the screen. Overall, the app helps encourage positivity, productivity, and personal growth by providing quick daily inspiration.
